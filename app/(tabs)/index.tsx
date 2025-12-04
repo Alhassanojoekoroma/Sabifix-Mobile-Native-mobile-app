@@ -1,98 +1,168 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator } from 'react-native';
+import { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { supabase } from '../../lib/supabase';
+import { IssueCard } from '../../components/IssueCard';
+import { HomeHeader } from '../../components/HomeHeader';
+import { Colors } from '../../constants/colors';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [issues, setIssues] = useState<any[]>([]);
+  const [userUpvotes, setUserUpvotes] = useState<string[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
+
+  const fetchData = async () => {
+    try {
+      // Get Issues
+      const { data: issuesData, error } = await supabase
+        .from('issues')
+        .select('*')
+        .order('upvote_count', { ascending: false });
+
+      if (error) throw error;
+      setIssues(issuesData || []);
+
+      // Get user's upvotes
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: upvotesData } = await supabase
+          .from('upvotes')
+          .select('issue_id')
+          .eq('user_id', user.id);
+
+        setUserUpvotes(upvotesData?.map(u => u.issue_id) || []);
+      }
+    } catch (error: any) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await fetchData();
+  };
+
+  const upvoteIssue = async (issueId: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const hasUpvoted = userUpvotes.includes(issueId);
+
+      if (hasUpvoted) {
+        await supabase.from('upvotes').delete().eq('issue_id', issueId).eq('user_id', user.id);
+        setUserUpvotes(prev => prev.filter(id => id !== issueId));
+
+        const issue = issues.find(i => i.id === issueId);
+        if (issue) {
+          await supabase.from('issues').update({ upvote_count: issue.upvote_count - 1 }).eq('id', issueId);
+          setIssues(prev => prev.map(i =>
+            i.id === issueId ? { ...i, upvote_count: i.upvote_count - 1 } : i
+          ));
+        }
+      } else {
+        await supabase.from('upvotes').insert({ issue_id: issueId, user_id: user.id });
+        setUserUpvotes(prev => [...prev, issueId]);
+
+        const issue = issues.find(i => i.id === issueId);
+        if (issue) {
+          await supabase.from('issues').update({ upvote_count: issue.upvote_count + 1 }).eq('id', issueId);
+          setIssues(prev => prev.map(i =>
+            i.id === issueId ? { ...i, upvote_count: i.upvote_count + 1 } : i
+          ));
+        }
+      }
+    } catch (error: any) {
+      console.error('Error toggling upvote:', error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={issues}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item, index }) => (
+          <View style={styles.itemContainer}>
+            <IssueCard
+              issue={item}
+              onUpvote={upvoteIssue}
+              hasUpvoted={userUpvotes.includes(item.id)}
+              rank={index + 1}
+            />
+          </View>
+        )}
+        contentContainerStyle={styles.listContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
+        }
+        ListHeaderComponent={() => (
+          <View style={styles.headerContainer}>
+            <HomeHeader />
+            <View style={styles.textHeader}>
+              <Text style={styles.subtitle}>Issue Categories</Text>
+              <Text style={styles.description}>
+                Browse issues by category
+              </Text>
+            </View>
+          </View>
+        )}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
   },
-  stepContainer: {
-    gap: 8,
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.background,
+  },
+  listContent: {
+    paddingBottom: 120,
+  },
+  itemContainer: {
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  headerContainer: {
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  textHeader: {
+    paddingHorizontal: 16,
+    marginTop: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  description: {
+    fontSize: 14,
+    color: Colors.textLight,
   },
 });
