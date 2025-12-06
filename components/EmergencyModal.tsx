@@ -14,24 +14,49 @@ export function EmergencyModal({ visible, onClose }: EmergencyModalProps) {
         {
             name: 'Police',
             number: '112',
+            description: 'General emergencies',
             icon: Shield,
             color: '#3B82F6',
         },
         {
             name: 'Ambulance',
-            number: '112',
+            number: '999',
+            description: 'Medical emergencies',
             icon: Ambulance,
             color: '#EF4444',
         },
         {
             name: 'Fire Service',
-            number: '112',
+            number: '999',
+            description: 'Fire emergencies',
             icon: Flame,
             color: '#F97316',
         },
         {
-            name: 'Disaster Management',
-            number: '112',
+            name: 'Police Direct',
+            number: '019',
+            description: 'Police hotline',
+            icon: Shield,
+            color: '#1E40AF',
+        },
+        {
+            name: 'Health Emergency',
+            number: '117',
+            description: 'Health/Ebola response',
+            icon: Ambulance,
+            color: '#DC2626',
+        },
+        {
+            name: 'National Security',
+            number: '119',
+            description: 'ONS emergency line',
+            icon: AlertTriangle,
+            color: '#7C3AED',
+        },
+        {
+            name: 'Disaster Mgmt',
+            number: '1199',
+            description: 'NDMA (Africell only)',
             icon: AlertTriangle,
             color: '#EAB308',
         },
@@ -70,9 +95,10 @@ export function EmergencyModal({ visible, onClose }: EmergencyModalProps) {
                                 onPress={() => callNumber(contact.number)}
                             >
                                 <View style={[styles.iconContainer, { backgroundColor: `${contact.color}20` }]}>
-                                    <contact.icon size={32} color={contact.color} />
+                                    <contact.icon size={28} color={contact.color} />
                                 </View>
                                 <Text style={styles.contactName}>{contact.name}</Text>
+                                <Text style={styles.contactDescription}>{contact.description}</Text>
                                 <Text style={styles.contactNumber}>{contact.number}</Text>
                             </TouchableOpacity>
                         ))}
@@ -133,34 +159,40 @@ const styles = StyleSheet.create({
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        gap: 16,
+        gap: 12,
     },
     card: {
-        width: '47%', // Slightly less than 50% to account for gap
+        width: '30%', // 3 columns for 7 contacts
         backgroundColor: '#F9FAFB',
         borderRadius: 16,
-        padding: 16,
+        padding: 12,
         alignItems: 'center',
         borderWidth: 1,
         borderColor: Colors.border,
     },
     iconContainer: {
-        width: 64,
-        height: 64,
-        borderRadius: 32,
+        width: 56,
+        height: 56,
+        borderRadius: 28,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 12,
+        marginBottom: 8,
     },
     contactName: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '600',
         color: Colors.text,
+        marginBottom: 2,
+        textAlign: 'center',
+    },
+    contactDescription: {
+        fontSize: 10,
+        color: Colors.textLight,
         marginBottom: 4,
         textAlign: 'center',
     },
     contactNumber: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: 'bold',
         color: Colors.primary,
     },

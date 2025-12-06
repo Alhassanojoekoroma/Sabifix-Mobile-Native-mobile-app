@@ -56,7 +56,7 @@ export function HomeHeader() {
         <>
             <View style={styles.container}>
                 <LinearGradient
-                    colors={['#1900ffff', '#ffffffff', '#5100ffff']}
+                    colors={['#5100ffff', '#00f7ffff', '#5100ffff']}
                     start={{ x: -1.5, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={[styles.gradient, { paddingTop: insets.top + 35 }]}

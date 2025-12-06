@@ -15,7 +15,7 @@ export default function OnboardingScreen() {
     const Screen1 = () => (
         <View style={styles.screenContainer}>
             <LinearGradient
-                colors={['#E9D5FF', '#F3E8FF']}
+                colors={['#0014cbff', '#2308ceff']}
                 style={styles.screenGradient}
             >
 
@@ -51,7 +51,7 @@ export default function OnboardingScreen() {
                                 <Text style={styles.primaryButtonText}>Get Started</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.iconButton} onPress={() => setActiveScreen(2)}>
-                                <ArrowRight size={24} color="#9333EA" />
+                                <ArrowRight size={24} color="#2308ceff" />
                             </TouchableOpacity>
                         </View>
 
@@ -67,215 +67,99 @@ export default function OnboardingScreen() {
     );
 
     const Screen2 = () => (
-        <View style={[styles.screenContainer, { backgroundColor: '#F9FAFB' }]}>
-
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                <View style={styles.headerRow}>
-                    <View style={styles.userInfo}>
-                        <LinearGradient
-                            colors={['#FCD34D', '#F59E0B']}
-                            style={styles.userAvatar}
-                        >
-                            <Text style={styles.userAvatarText}>M</Text>
-                        </LinearGradient>
-                        <View>
-                            <Text style={styles.userName}>Hello Citizen</Text>
-                            <View style={styles.progressRow}>
-                                <Shield size={16} color="#F59E0B" />
-                                <Text style={styles.citizenLevel}>Active Citizen</Text>
-                            </View>
+        <View style={styles.screenContainer}>
+            <LinearGradient
+                colors={['#ffbf00ff', '#ffffffff']}
+                style={styles.modernScreenGradient}
+            >
+                <View style={styles.modernContent}>
+                    {/* Simple Illustration */}
+                    <View style={styles.modernIllustration}>
+                        <View style={styles.modernIconCircle}>
+                            <AlertTriangle size={60} color="#F97316" strokeWidth={2} />
                         </View>
                     </View>
-                    <TouchableOpacity style={styles.roundBtn}>
-                        <Bell size={24} color="#374151" />
-                    </TouchableOpacity>
+
+                    {/* Content Card */}
+                    <View style={styles.modernCard}>
+                        <Text style={styles.modernTitle}>Report Issues</Text>
+
+                        <Text style={styles.modernSubtitle}>
+                            Spot a problem in your community? Report it instantly with a photo and description. Watch as local authorities take action to fix it.
+                        </Text>
+
+                        <TouchableOpacity
+                            style={styles.modernButton}
+                            onPress={completeOnboarding}
+                        >
+                            <Text style={styles.modernButtonText}>Get Started</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => setActiveScreen(3)}>
+                            <Text style={styles.modernSecondaryText}>
+                                Next: Track Progress →
+                            </Text>
+                        </TouchableOpacity>
+
+                        {/* Indicators */}
+                        <View style={styles.modernIndicators}>
+                            <View style={styles.indicator} />
+                            <View style={[styles.indicator, styles.indicatorActive]} />
+                            <View style={styles.indicator} />
+                        </View>
+                    </View>
                 </View>
-
-                <View style={styles.titleRow}>
-                    <Text style={styles.title}>Community{'\n'}Updates</Text>
-                    <TouchableOpacity style={styles.roundBtn}>
-                        <Search size={24} color="#374151" />
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.cardsContainer}>
-                    <LinearGradient
-                        colors={['#DBEAFE', '#EFF6FF']}
-                        style={styles.courseCard}
-                    >
-                        <View style={styles.courseHeader}>
-                            <View style={styles.iconBox}>
-                                <AlertTriangle size={20} color="#DC2626" />
-                            </View>
-                            <View style={styles.ratingBadge}>
-                                <Text>🔥</Text>
-                                <Text style={styles.ratingText}>Urgent</Text>
-                            </View>
-                        </View>
-
-                        <Text style={styles.categoryText}>Sanitation</Text>
-                        <Text style={styles.courseTitle}>Uncollected Garbage at{'\n'}Hill Station</Text>
-
-                        <View style={styles.courseFooter}>
-                            <View style={styles.avatarsRow}>
-                                <View style={[styles.miniAvatar, { backgroundColor: '#60A5FA', zIndex: 4 }]} />
-                                <View style={[styles.miniAvatar, { backgroundColor: '#F472B6', marginLeft: -8, zIndex: 3 }]} />
-                                <View style={[styles.miniAvatar, { backgroundColor: '#4B5563', marginLeft: -8, zIndex: 1 }]}>
-                                    <Text style={styles.miniAvatarText}>50+</Text>
-                                </View>
-                            </View>
-                            <TouchableOpacity style={styles.arrowBtn} onPress={completeOnboarding}>
-                                <ArrowRight size={20} color="#374151" />
-                            </TouchableOpacity>
-                        </View>
-                    </LinearGradient>
-
-                    <LinearGradient
-                        colors={['#FEF3C7', '#FFFBEB']}
-                        style={styles.courseCard}
-                    >
-                        <View style={styles.courseHeader}>
-                            <View style={styles.iconBox}>
-                                <MapPin size={20} color="#D97706" />
-                            </View>
-                            <View style={styles.ratingBadge}>
-                                <Text>🚧</Text>
-                                <Text style={styles.ratingText}>In Progress</Text>
-                            </View>
-                        </View>
-
-                        <Text style={styles.categoryText}>Infrastructure</Text>
-                        <Text style={styles.courseTitle}>Broken Street Light{'\n'}Main Road</Text>
-
-                        <View style={styles.courseFooter}>
-                            <View style={styles.avatarsRow}>
-                                <View style={[styles.miniAvatar, { backgroundColor: '#34D399', zIndex: 4 }]} />
-                                <View style={[styles.miniAvatar, { backgroundColor: '#F87171', marginLeft: -8, zIndex: 3 }]} />
-                                <View style={[styles.miniAvatar, { backgroundColor: '#4B5563', marginLeft: -8, zIndex: 1 }]}>
-                                    <Text style={styles.miniAvatarText}>20+</Text>
-                                </View>
-                            </View>
-                            <TouchableOpacity style={styles.arrowBtn} onPress={completeOnboarding}>
-                                <ArrowRight size={20} color="#374151" />
-                            </TouchableOpacity>
-                        </View>
-                    </LinearGradient>
-                </View>
-
-
-            </ScrollView>
+            </LinearGradient>
         </View>
     );
 
     const Screen3 = () => (
-        <View style={[styles.screenContainer, { backgroundColor: '#F9FAFB' }]}>
-
-            <ScrollView contentContainerStyle={styles.scrollContent}>
-                <View style={styles.headerRow}>
-                    <TouchableOpacity style={styles.roundBtn} onPress={() => setActiveScreen(2)}>
-                        <ChevronLeft size={24} color="#374151" />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.roundBtn}>
-                        <MoreVertical size={24} color="#374151" />
-                    </TouchableOpacity>
-                </View>
-
-                <Text style={styles.bigTitle}>Impact{'\n'}Tracker</Text>
-
-                <View style={styles.statsRow}>
-                    <LinearGradient
-                        colors={['#E5E7EB', '#F3F4F6']}
-                        style={styles.statCard}
-                    >
-                        <View style={styles.statHeader}>
-                            <View style={styles.statLabel}>
-                                <AlertTriangle size={20} color="#374151" />
-                                <Text style={styles.statLabelText}>Reported</Text>
-                            </View>
-                            <View style={styles.smallIconBtn}>
-                                <TrendingUp size={16} color="#374151" />
-                            </View>
-                        </View>
-                        <Text style={styles.statValue}>15</Text>
-                    </LinearGradient>
-
-                    <LinearGradient
-                        colors={['#D1FAE5', '#ECFDF5']}
-                        style={styles.statCard}
-                    >
-                        <View style={styles.statHeader}>
-                            <View style={styles.statLabel}>
-                                <CheckCircle size={20} color="#059669" />
-                                <Text style={styles.statLabelText}>Fixed</Text>
-                            </View>
-                            <View style={styles.smallIconBtn}>
-                                <TrendingUp size={16} color="#059669" />
-                            </View>
-                        </View>
-                        <Text style={[styles.statValue, { color: '#059669' }]}>8</Text>
-                    </LinearGradient>
-                </View>
-
-                <View style={styles.sectionHeader}>
-                    <View style={styles.sectionTitleRow}>
-                        <TrendingUp size={20} color="#374151" />
-                        <Text style={styles.sectionTitle}>Resolution Rate</Text>
-                    </View>
-                    <TouchableOpacity style={styles.roundBtn}>
-                        <MoreVertical size={20} color="#374151" />
-                    </TouchableOpacity>
-                </View>
-
-                <LinearGradient
-                    colors={['#E9D5FF', '#DCFCE7']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={styles.chartCard}
-                >
-                    <View style={styles.chartContainer}>
-                        <View style={styles.chartColumn}>
-                            <View style={styles.chartBarContainer}>
-                                <LinearGradient colors={['#FEF08A', '#FDE047']} style={[styles.barBack, { height: 128 }]}>
-                                </LinearGradient>
-                                <LinearGradient colors={['#D8B4FE', '#C084FC']} style={[styles.barFront, { height: 60, bottom: 16 }]}>
-                                    <View style={[styles.barBadge, { top: -24 }]}>
-                                        <Text style={styles.barBadgeText}>5</Text>
-                                    </View>
-                                </LinearGradient>
-                            </View>
-                            <Text style={styles.monthText}>May</Text>
-                        </View>
-
-                        <View style={styles.chartColumn}>
-                            <View style={styles.chartBarContainer}>
-                                <LinearGradient colors={['#D8B4FE', '#C084FC']} style={[styles.barBack, { height: 160 }]}>
-                                </LinearGradient>
-                                <View style={[styles.barFront, { height: 100, bottom: 24, backgroundColor: '#111827' }]}>
-                                    <Text style={styles.barBigValue}>12</Text>
-                                    <Text style={styles.barLabel}>fixed</Text>
-                                </View>
-                            </View>
-                            <Text style={styles.monthText}>June</Text>
-                        </View>
-
-                        <View style={styles.chartColumn}>
-                            <View style={styles.chartBarContainer}>
-                                <LinearGradient colors={['#BBF7D0', '#86EFAC']} style={[styles.barBack, { height: 144 }]}>
-                                </LinearGradient>
-                                <View style={[styles.barFront, { height: 80, bottom: 16, backgroundColor: '#111827' }]}>
-                                    <Text style={styles.barBigValue}>8</Text>
-                                    <Text style={styles.barLabel}>fixed</Text>
-                                </View>
-                            </View>
-                            <Text style={styles.monthText}>July</Text>
+        <View style={styles.screenContainer}>
+            <LinearGradient
+                colors={['rgba(255, 255, 255, 0.95)', 'rgba(255, 253, 239, 0.95)']}
+                style={styles.modernScreenGradient}
+            >
+                <View style={styles.modernContent}>
+                    {/* Simple Illustration */}
+                    <View style={styles.modernIllustration}>
+                        <View style={[styles.modernIconCircle, { backgroundColor: '#FEF3C7' }]}>
+                            <TrendingUp size={60} color="#EAB308" strokeWidth={2} />
                         </View>
                     </View>
-                </LinearGradient>
 
+                    {/* Content Card */}
+                    <View style={styles.modernCard}>
+                        <Text style={styles.modernTitle}>Track Progress</Text>
 
-            </ScrollView>
+                        <Text style={styles.modernSubtitle}>
+                            See real-time updates as local authorities work to resolve reported issues. Track the impact you're making in your community.
+                        </Text>
+
+                        <TouchableOpacity
+                            style={styles.modernButton}
+                            onPress={completeOnboarding}
+                        >
+                            <Text style={styles.modernButtonText}>Get Started</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => setActiveScreen(1)}>
+                            <Text style={styles.modernSecondaryText}>
+                                ← Back to Intro
+                            </Text>
+                        </TouchableOpacity>
+
+                        {/* Indicators */}
+                        <View style={styles.modernIndicators}>
+                            <View style={styles.indicator} />
+                            <View style={styles.indicator} />
+                            <View style={[styles.indicator, styles.indicatorActive]} />
+                        </View>
+                    </View>
+                </View>
+            </LinearGradient>
         </View>
     );
+
 
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -327,7 +211,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     navBtnActive: {
-        backgroundColor: '#9333EA',
+        backgroundColor: '#0014cbff',
     },
     navText: {
         fontWeight: '500',
@@ -425,7 +309,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         borderRadius: 32,
         padding: 32,
-        shadowColor: '#000',
+        shadowColor: '#ffffffff',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 12,
@@ -467,9 +351,9 @@ const styles = StyleSheet.create({
         width: 56,
         height: 56,
         borderRadius: 28,
-        backgroundColor: '#F3E8FF',
+        backgroundColor: '#ffffffff',
         borderWidth: 2,
-        borderColor: '#D8B4FE',
+        borderColor: 'rgba(255, 255, 255, 1)',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -760,5 +644,93 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontWeight: '600',
         fontSize: 16,
+    },
+    // Modern Onboarding Styles
+    modernScreenGradient: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modernContent: {
+        flex: 1,
+        width: '100%',
+        justifyContent: 'space-between',
+        paddingVertical: 60,
+    },
+    modernIllustration: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modernIconCircle: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        backgroundColor: '#FFE5D9',
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 4,
+    },
+    modernCard: {
+        backgroundColor: 'rgba(255, 253, 239, 0.95)',
+        borderTopLeftRadius: 32,
+        borderTopRightRadius: 32,
+        paddingHorizontal: 32,
+        paddingTop: 40,
+        paddingBottom: 40,
+        alignItems: 'center',
+        shadowColor: '#ffffffff',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 8,
+    },
+    modernTitle: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#111827',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    modernSubtitle: {
+        fontSize: 16,
+        lineHeight: 24,
+        color: '#6B7280',
+        textAlign: 'center',
+        marginBottom: 32,
+        paddingHorizontal: 8,
+    },
+    modernButton: {
+        backgroundColor: '#111827',
+        paddingVertical: 16,
+        paddingHorizontal: 48,
+        borderRadius: 9999,
+        marginBottom: 16,
+        minWidth: 200,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    modernButtonText: {
+        color: '#FFFFFF',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    modernSecondaryText: {
+        fontSize: 14,
+        color: '#9CA3AF',
+        marginBottom: 24,
+    },
+    modernIndicators: {
+        flexDirection: 'row',
+        gap: 8,
+        marginTop: 8,
     },
 });
